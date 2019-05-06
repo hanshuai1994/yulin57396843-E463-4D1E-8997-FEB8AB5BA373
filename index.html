@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8>
+	<title>玉林</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+	<!-- 主菜单 -->
+	<ul class="tab-menu" id="top-menu">
+		<li class="home active">
+			<a href="#tab-home" data-toggle="tab">首页</a>
+		</li>
+		<li class="statistics ">
+			<a href="#tab-statistics" data-toggle="tab">能耗统计</a>
+		</li>
+		<li class="manage ">
+			<a href="#tab-manage" data-toggle="tab">运维管理</a>
+		</li>
+		<!-- <li class="monitor">
+			<a href="#tab-monitor" data-toggle="tab">监控系统</a>
+		</li> -->
+	</ul>
+
+	<!-- 主体容器 -->
+	<div class="tab-content" id="main-container">
+		<!-- 首页 -->
+		<div class="tab-pane active" id="tab-home">
+			<!-- 加载容器 -->
+			<div id="loading" class="active">
+				<img src="./img/loading.gif" alt="">
+				<p class="text">载入中...</p>
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+				</div>
+			</div>
+
+			<!-- canvas绘图容器 -->
+			<div id="container">
+				<!-- 左侧展示与选择区域 -->
+				<div class="view-wrap select-wrap">
+					<!-- 楼栋显示/隐藏 -->
+					<div class="build-tab">
+						<span class="north-build active" data-name="北楼">北楼</span>
+						<span class="middle-build active" data-name="亭廊">西楼</span>
+						<span class="south-build active" data-name="南楼">南楼</span>
+					</div>
+
+					<!-- 楼层切换 -->
+					<div class="floor-switch">
+						<div class="floor-text" data-index="all" data-toggle="dropdown" aria-expanded="false">全景</div>
+						<ul class="dropdown-menu">
+							<li><a href="#" data-index="all">全景</a></li>
+							<!-- <li><a href="#" data-index="0">1楼</a></li>
+							<li><a href="#" data-index="1">2楼</a></li>
+							<li><a href="#" data-index="2">3楼</a></li>
+							<li><a href="#" data-index="3">4楼</a></li>
+							<li><a href="#" data-index="4">5楼</a></li>
+							<li><a href="#" data-index="5">6楼</a></li>
+							<li><a href="#" data-index="6">7楼</a></li>
+							<li><a href="#" data-index="7">8楼</a></li> -->
+						</ul>
+					</div>
+
+					<!-- 房间切换 -->
+					<div class="room-switch">
+						<div class="room-text" data-toggle="dropdown" aria-expanded="false">1288室</div>
+						<ul class="dropdown-menu">
+							<!-- <li><a href="#" data-index="1287">1287室</a></li>
+							<li><a href="#" data-index="1288">1288室</a></li>
+							<li><a href="#" data-index="1289">1289室</a></li> -->
+						</ul>
+					</div>
+
+					<!-- 运维按钮 -->
+					<div class="operate-btn"></div>
+				</div>
+
+				<!-- 右侧展示与编辑区域 -->
+				<div class="view-wrap air-system">
+					<ul class="tab-menu">
+						<li class="air-conditioner active">
+							<a href="#tab-air-conditioner" data-toggle="tab">空调</a>
+						</li>
+						<li class="fresh-air">
+							<a href="#tab-fresh-air" data-toggle="tab">新风</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab-air-conditioner">
+							<!-- <div class="state-view air-state">
+											<p class="label-v">当前状态</p>
+											<p class="info">开</p>
+										</div>
+										<div class="state-view immediate-temperature">
+											<p class="label-v">即时室内空气温度</p>
+											<p class="info">26℃</p>
+										</div>
+										<div class="state-view immediate-humidity">
+											<p class="label-v">即时室内空气湿度</p>
+											<p class="info">30%</p>
+										</div>
+										<div class="state-view monthly-temperature">
+											<p class="label-v">每月室内空气温度</p>
+											<p class="info">26℃</p>
+										</div>
+										<div class="state-view monthly-humidity">
+											<p class="label-v">每月室内空气湿度</p>
+											<p class="info">30%</p>
+										</div>
+		
+										<div class="state-view cloud-speed">
+											<p class="label-v">风速</p>
+											<p class="info">超高风</p>
+										</div>
+										<div class="state-view mode">
+											<p class="label-v">模式</p>
+											<p class="info">自动</p>
+										</div>
+										<div class="state-view pre-temperature">
+											<p class="label-v">设定温度</p>
+											<p class="info">26℃</p>
+										</div> -->
+							<div class="set">设置</div>
+						</div>
+						<div class="tab-pane" id="tab-fresh-air">
+							<!-- <div class="state-view air-state">
+											<p class="label-v">当前状态</p>
+											<p class="info">开</p>
+										</div>
+										<div class="state-view cloud-speed">
+											<p class="label-v">风速</p>
+											<p class="info">睡眠模式</p>
+										</div>
+										<div class="state-view mode">
+											<p class="label-v">模式</p>
+											<p class="info">自动</p>
+										</div> -->
+							<div class="set">设置</div>
+						</div>
+					</div>
+					<div class="air-edit air-conditioner">
+						<div class="title-box">
+							<p class="title">空调控制</p>
+							<span class="shut"></span>
+						</div>
+						<div class="content-box">
+							<div class="attr-line set-state">
+								<div class="label-a">状态</div>
+								<div class="attr-set" data-state="off">off</div>
+							</div>
+							<div class="attr-line set-temperature">
+								<div class="label-a">设定温度(℃)</div>
+								<div class="attr-set">
+									<input type="number" placeholder="输入值"
+										oninput="if(value>40)value=40;if(value<0)value=0">
+								</div>
+							</div>
+							<div class="attr-line set-mode">
+								<div class="label-a">模式</div>
+								<div class="attr-set">
+									<div class="btn-menu" data-toggle="dropdown" aria-expanded="false"></div>
+									<ul class="dropdown-menu">
+										<li><a href="#">自动</a></li>
+										<li><a href="#">热交换</a></li>
+										<li><a href="#">排风</a></li>
+										<li><a href="#">送风</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="attr-line set-cloud">
+								<div class="label-a">风速</div>
+								<div class="attr-set">
+									<div class="btn-menu" data-toggle="dropdown" aria-expanded="false"></div>
+									<ul class="dropdown-menu">
+										<li><a href="#">自动</a></li>
+										<li><a href="#">热交换</a></li>
+										<li><a href="#">排风</a></li>
+										<li><a href="#">送风</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ensure"></div>
+						</div>
+					</div>
+					<div class="air-edit fresh-air">
+						<div class="title-box">
+							<p class="title">新风控制</p>
+							<span class="shut"></span>
+						</div>
+						<div class="content-box">
+							<div class="attr-line set-state">
+								<div class="label-a">状态</div>
+								<div class="attr-set">off</div>
+							</div>
+							<div class="attr-line set-mode">
+								<div class="label-a">模式</div>
+								<div class="attr-set">
+									<div class="btn-menu" data-toggle="dropdown" aria-expanded="false"></div>
+									<ul class="dropdown-menu">
+										<li><a href="#">自动</a></li>
+										<li><a href="#">热交换</a></li>
+										<li><a href="#">排风</a></li>
+										<li><a href="#">送风</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="attr-line set-cloud">
+								<div class="label-a">风速</div>
+								<div class="attr-set">
+									<div class="btn-menu" data-toggle="dropdown" aria-expanded="false"></div>
+									<ul class="dropdown-menu">
+										<li><a href="#">自动</a></li>
+										<li><a href="#">热交换</a></li>
+										<li><a href="#">排风</a></li>
+										<li><a href="#">送风</a></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ensure"></div>
+						</div>
+					</div>
+				</div>
+
+				<!-- 中部运维区域 -->
+				<div class="operate-mask">
+					<div class="operate-wrap">
+						<div class="wrap-left">
+							<div class="top-area">
+								<span class="title">运维</span>
+								<span class="calendar"></span>
+							</div>
+							<div class="content">
+								<!-- <div class="operate-item active" data-state="finished">
+									<span class="title">空调无法制冷</span>
+									<span class="date">2019/4/10</span>
+								</div>
+								<div class="operate-item" data-state="unfinished">
+									<span class="title">下水道堵住</span>
+									<span class="date">2019/4/10</span>
+								</div> -->
+							</div>
+							<div class="bottom-area">
+								<div class="add-btn">
+									<span class="icon"></span>
+									<span class="text">新建</span>
+								</div>
+							</div>
+						</div>
+						<div class="wrap-right">
+							<div class="top-area">
+								<p class="room-path">北楼-1-1286</p>
+								<span class="shut"></span>
+							</div>
+							<div class="view-area">
+								<div class="title">
+									<span class="label-l">标题</span>
+									<span class="text">空调无法制冷</span>
+								</div>
+								<div class="time">
+									<span class="label-l">时间</span>
+									<span class="text">2019/4/10/ 15:44</span>
+								</div>
+								<div class="state">
+									<span class="label-l">状态</span>
+									<span class="text" data-state="unfinished"></span>
+								</div>
+								<div class="content">
+									<span class="label-l">内容</span>
+									<textarea class="text"
+										disabled>这几天我家厨房顶发生渗水现象，每间隔6，7秒钟就会滴下一滴。（如图，就是顺着这根管子中间部分向下渗水）现在的漏水点不止这根管子，向卫生间过渡的墙顶上又出现了一个漏水点。其实去年也出现了这种情况，和楼上邻居反应后，楼上邻居找来透下水道的人来透，之后就没有出现过漏水现象。可前几天又开始渗水。找到楼上邻居，楼上邻居找到透下水的人来，可是这次并不见效。渗水现象仍然存在。再找到邻居，邻居说他们也找不出原因.请问这种渗水情况是什么原因，楼上的漏水点会在哪里？如果刨开地面会很麻烦，在楼上安装明管会管用吗？麻烦大家了。</textarea>
+								</div>
+								<span class="modify-btn"></span>
+								<span class="delete-btn"></span>
+							</div>
+							<div class="edit-area">
+								<div class="title">
+									<span class="label-l">标题</span>
+									<input type="text" value="空调无法制冷">
+								</div>
+								<div class="time">
+									<span class="label-l">时间</span>
+									<span class="calendar"></span>
+								</div>
+								<div class="state">
+									<span class="label-l">状态</span>
+									<div class="radio-box">
+										<span class="selected" data-state="unfinished">未完成</span>
+										<span data-state="finished">已完成</span>
+									</div>
+								</div>
+								<div class="content">
+									<span class="label-l">内容</span>
+									<textarea
+										class="text">这几天我家厨房顶发生渗水现象，每间隔6，7秒钟就会滴下一滴。（如图，就是顺着这根管子中间部分向下渗水）现在的漏水点不止这根管子，向卫生间过渡的墙顶上又出现了一个漏水点。其实去年也出现了这种情况，和楼上邻居反应后，楼上邻居找来透下水道的人来透，之后就没有出现过漏水现象。可前几天又开始渗水。找到楼上邻居，楼上邻居找到透下水的人来，可是这次并不见效。渗水现象仍然存在。再找到邻居，邻居说他们也找不出原因.请问这种渗水情况是什么原因，楼上的漏水点会在哪里？如果刨开地面会很麻烦，在楼上安装明管会管用吗？麻烦大家了。</textarea>
+								</div>
+
+								<div class="btn-box">
+									<span class="save"></span>
+									<span class="cancel"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="shadow-btn">阴影</div>
+				<div class="init-btn">复原</div>
+			</div>
+		</div>
+		<!-- 能耗统计 -->
+		<div class="tab-pane " id="tab-statistics">
+			<!-- <div class="water-box">
+				<div class="title">水表</div>
+				<div class="content">
+					<div class="info">
+						<div class="immediate">
+							<span class="label-l">即时水量</span>
+							<span class="text">0.5t/h</span>
+						</div>
+						<div class="monthly">
+							<span class="label-l">每月水量</span>
+							<span class="text">5t/h</span>
+						</div>
+						<div class="total">
+							<span class="label-l">历史总水量</span>
+							<span class="text">29t/h</span>
+						</div>
+					</div>
+					<div class="chart"></div>
+				</div>
+			</div>
+			<div class="electric-box">
+				<div class="title">电表</div>
+				<div class="content">
+					<div class="info">
+						<div class="immediate">
+							<span class="label-l">即时电量</span>
+							<span class="text">3kW</span>
+						</div>
+						<div class="monthly">
+							<span class="label-l">每月电量</span>
+							<span class="text">10kW</span>
+						</div>
+						<div class="total">
+							<span class="label-l">历史总电量</span>
+							<span class="text">200kW</span>
+						</div>
+					</div>
+					<div class="chart"></div>
+				</div>
+			</div>
+			<div class="light-box">
+				<div class="title">光伏</div>
+				<div class="content">
+					<div class="info">
+						<div class="immediate">
+							<span class="label-l">即时发电量</span>
+							<span class="text">3kW</span>
+						</div>
+						<div class="monthly">
+							<span class="label-l">每月发电量</span>
+							<span class="text">25kW</span>
+						</div>
+						<div class="total">
+							<span class="label-l">历史总发电量</span>
+							<span class="text">598kW</span>
+						</div>
+					</div>
+					<div class="chart"></div>
+				</div>
+			</div> -->
+			<ul class="tab-menu">
+				<li class="electric active">
+					<a href="#tab-electric" data-toggle="tab">能耗</a>
+				</li>
+				<li class="water ">
+					<a href="#tab-water" data-toggle="tab">水耗</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab-electric">
+					<div class="chart-1 active"></div>
+					<div class="chart-2 "></div>
+					<div class="chart-3 "></div>
+				</div>
+				<div class="tab-pane " id="tab-water">
+					<div class="chart-1 active"></div>
+					<div class="chart-2 "></div>
+					<div class="chart-3 "></div>
+				</div>
+			</div>
+		</div>
+		<!-- 运维管理 -->
+		<div class="tab-pane " id="tab-manage">
+			<div class="operate-menu">
+				<div class="build-tab">
+					<span class="north-build active" data-name="北楼">北楼</span>
+					<span class="middle-build" data-name="亭廊">亭廊</span>
+					<span class="south-build" data-name="南楼">南楼</span>
+				</div>
+				<div class="floor-switch">
+					<div class="floor-text" data-index="all" data-toggle="dropdown" aria-expanded="false">所有楼层</div>
+					<ul class="dropdown-menu">
+						<!-- <li><a href="#" data-index="all">所有楼层</a></li>
+						<li><a href="#" data-index="1">1楼</a></li>
+						<li><a href="#" data-index="2">2楼</a></li>
+						<li><a href="#" data-index="3">3楼</a></li>
+						<li><a href="#" data-index="4">4楼</a></li>
+						<li><a href="#" data-index="5">5楼</a></li>
+						<li><a href="#" data-index="6">6楼</a></li>
+						<li><a href="#" data-index="7">7楼</a></li>
+						<li><a href="#" data-index="8">8楼</a></li> -->
+					</ul>
+				</div>
+				<div class="room-switch">
+					<div class="room-text" data-index="all" data-toggle="dropdown" aria-expanded="false">所有房间</div>
+					<ul class="dropdown-menu">
+						<li><a href="#" data-index="1287">1287室</a></li>
+						<li><a href="#" data-index="1288">1288室</a></li>
+						<li><a href="#" data-index="1289">1289室</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="operate-wrap">
+				<div class="wrap-left">
+					<div class="top-area">
+						<span class="title">运维管理</span>
+						<span class="calendar"></span>
+					</div>
+					<div class="content">
+						<!-- <div class="operate-item active" data-state="finished">
+							<span class="title">空调无法制冷</span>
+							<span class="date">2019/4/10</span>
+						</div>
+						<div class="operate-item" data-state="unfinished">
+							<span class="title">下水道堵住</span>
+							<span class="date">2019/4/10</span>
+						</div>
+						<div class="operate-item" data-state="finished">
+							<span class="title">下水道堵住</span>
+							<span class="date">2019/4/10</span>
+						</div> -->
+					</div>
+					<div class="bottom-area">
+						<div class="add-btn">
+							<span class="icon"></span>
+							<span class="text">新建</span>
+						</div>
+					</div>
+				</div>
+				<div class="wrap-right">
+					<div class="view-area">
+						<div class="title">
+							<span class="label-l">标题</span>
+							<span class="text">空调无法制冷</span>
+						</div>
+						<div class="time">
+							<span class="label-l">时间</span>
+							<span class="text">2019/4/10/ 15:44</span>
+						</div>
+						<div class="room">
+							<span class="label-l">房间</span>
+							<span class="text">北楼-1楼-102</span>
+						</div>
+						<div class="state">
+							<span class="label-l">状态</span>
+							<span class="text" data-state="unfinished"></span>
+						</div>
+						<div class="content">
+							<span class="label-l">内容</span>
+							<textarea class="text"
+								disabled>这几天我家厨房顶发生渗水现象，每间隔6，7秒钟就会滴下一滴。（如图，就是顺着这根管子中间部分向下渗水）现在的漏水点不止这根管子，向卫生间过渡的墙顶上又出现了一个漏水点。其实去年也出现了这种情况，和楼上邻居反应后，楼上邻居找来透下水道的人来透，之后就没有出现过漏水现象。可前几天又开始渗水。找到楼上邻居，楼上邻居找到透下水的人来，可是这次并不见效。渗水现象仍然存在。再找到邻居，邻居说他们也找不出原因.请问这种渗水情况是什么原因，楼上的漏水点会在哪里？如果刨开地面会很麻烦，在楼上安装明管会管用吗？麻烦大家了。</textarea>
+						</div>
+						<span class="modify-btn"></span>
+						<span class="delete-btn"></span>
+					</div>
+					<div class="edit-area">
+						<div class="title">
+							<span class="label-l">标题</span>
+							<input type="text" value="空调无法制冷">
+						</div>
+						<div class="time">
+							<span class="label-l">时间</span>
+							<span class="calendar"></span>
+						</div>
+						<div class="room">
+							<span class="label-l">房间</span>
+							<div class="room-area">
+								<div class="floor-box">
+									<div class="label-a">楼层</div>
+									<div class="floor-switch switch-box">
+										<div class="floor-text menu-text" data-index="none" data-toggle="dropdown"
+											aria-expanded="false">请选择</div>
+										<ul class="dropdown-menu"></ul>
+									</div>
+								</div>
+								<div class="room-box">
+									<div class="label-a">房间号</div>
+									<div class="room-switch switch-box">
+										<div class="room-text menu-text" data-index="none" data-toggle="dropdown"
+											aria-expanded="false">请选择</div>
+										<ul class="dropdown-menu"></ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="state">
+							<span class="label-l">状态</span>
+							<div class="radio-box">
+								<span class="selected" data-state="unfinished">未完成</span>
+								<span data-state="finished">已完成</span>
+							</div>
+						</div>
+						<div class="content">
+							<span class="label-l">内容</span>
+							<textarea
+								class="text">这几天我家厨房顶发生渗水现象，每间隔6，7秒钟就会滴下一滴。（如图，就是顺着这根管子中间部分向下渗水）现在的漏水点不止这根管子，向卫生间过渡的墙顶上又出现了一个漏水点。其实去年也出现了这种情况，和楼上邻居反应后，楼上邻居找来透下水道的人来透，之后就没有出现过漏水现象。可前几天又开始渗水。找到楼上邻居，楼上邻居找到透下水的人来，可是这次并不见效。渗水现象仍然存在。再找到邻居，邻居说他们也找不出原因.请问这种渗水情况是什么原因，楼上的漏水点会在哪里？如果刨开地面会很麻烦，在楼上安装明管会管用吗？麻烦大家了。</textarea>
+						</div>
+
+						<div class="btn-box">
+							<span class="save"></span>
+							<span class="cancel"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 监控系统 -->
+		<!-- <div class="tab-pane" id="tab-monitor"></div> -->
+	</div>
+
+	<!-- 确认弹窗 -->
+	<div id="confirm-mask">
+		<div class="confirm-box">
+			<div class="content">是否保存已经发生的更改？</div>
+			<div class="btns">
+				<span class="save">是</span>
+				<span class="deny">否</span>
+				<span class="cancel">取消</span>
+			</div>
+		</div>
+	</div>
+
+	<!-- 基础依赖 -->
+	<script src="./js/build/three.js"></script>
+	<script src="./js/build/jquery.min.js"></script>
+	<script src="./js/build/bootstrap.min.js"></script>
+	<script src="./js/build/echarts.min.js"></script>
+	<script src="./js/build/Tween.min.js"></script>
+
+	<!-- 控制器依赖 -->
+	<script src="./js/controls/OrbitControls.js"></script>
+
+	<!-- 拓展依赖 -->
+	<script src="./js/extend/ThreeBSP.js"></script>
+	<script src="./js/extend/SubdivisionModifier.js"></script>
+	<script src='./js/extend/BufferGeometryUtils.js'></script>
+
+	<!-- 加载器与导出器 -->
+	<script src="./js/loaders/GLTFLoader.js"></script>
+	<script src="./js/exporters/GLTFExporter.js"></script>
+	<script src="./js/loaders/OBJLoader.js"></script>
+	<script src="./js/exporters/OBJExporter.js"></script>
+	<script src="./js/loaders/FBXLoader.js"></script>
+	<script src="./js/loaders/inflate.min.js"></script>
+
+	<!-- 插件 -->
+	<script src="./js/laydate/laydate.js"></script>
+
+	<!-- dom数据与组件 -->
+	<script src="./js/data/domData.js"></script>
+	<script src="./js/component/domTemplate.js"></script>
+	<script src="./js/importDom.js"></script>
+
+	<!-- 工具库依赖 -->
+	<script src="./js/utils/utils.js"></script>
+	<script src="./js/utils/analysisRevit.js"></script>
+
+	<!-- 程序入口 -->
+	<script src='./js/main.js'></script>
+
+	<!-- echarts 设置 -->
+	<script src="./js/data/meterMap.js"></script>
+	<script src="./js/echarts/setCharts.js"></script>
+</body>
+
+</html>
