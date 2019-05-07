@@ -99,7 +99,7 @@ const divideGroup = (group, meshes, line_material, material_lib) => {
  * @param {array} material_lib_box  box 材质库
  * @param {array} material_lib_clip clip 材质库
  */
-const getDividedFloor = (build, build_name, material_lib_box) => {
+const getDividedFloor = (build, build_name, material_lib_box, progress) => {
     // 用于区分楼层的预设高度
     const preHeight = [0.00, 4.50, 9.00, 11.50]
 
@@ -121,9 +121,15 @@ const getDividedFloor = (build, build_name, material_lib_box) => {
         }
     }
 
+    const $progress_divide = $('#loading>.progress.divide>.progress-bar')
+
     const floor_offset = build_name == '连廊' ? 300 : 120;
     outer:
         for (const mesh of objects.box) { // 遍历 box 组的所有 mesh
+            progress.divided++;
+            const range = `${parseInt((progress.divided / progress.all * 100))}%`
+            $progress_divide.css('width', range).text(range);
+            
             const box3 = new THREE.Box3().expandByObject(mesh);
             const center = box3.getCenter(new THREE.Vector3());
 
@@ -175,7 +181,7 @@ const getDividedFloor = (build, build_name, material_lib_box) => {
         // floor.name = i + 1 + '楼';
         // floor_group.add(floor);
 
-        const merge_result = merge_obj_children(objects.floor[i]);
+        const merge_result = merge_obj_children(objects.floor[i], progress);
         // console.log('merge_result', merge_result);
         merge_result.name = i + 1 + '楼';
         floor_group.add(merge_result);
@@ -213,6 +219,8 @@ const analysisRevit = (paths, callback) => {
     let loaded_map = {};
     // return
 
+    const $progress_load = $('#loading>.progress.load>.progress-bar');
+
     // 使用 promise 进行多个异步处理
     let length = paths.length;
     for (let i = 0; i < length; i++) {
@@ -223,7 +231,7 @@ const analysisRevit = (paths, callback) => {
                 function (object) { // onLoad
                     builds[path] = object;
                     // builds.push(object);
-                    resolve();
+                    resolve(object.children);
                 },
                 (xhr) => { // onProgress
                     const loaded_keys = Object.keys(loaded_map);
@@ -236,10 +244,8 @@ const analysisRevit = (paths, callback) => {
                             loaded_all += loaded_map[key];
                         }
 
-                        const range = `${parseInt((loaded_all / total * 100))}%`
-                        $('#loading>.progress>.progress-bar').css('width', range).text(range);
-
-                        // $('#loading>.text').text(range);
+                        const range = `${parseInt((loaded_all / total * 100))}%`;
+                        $progress_load.css('width', range).text(range);
                     } else {
                         total += xhr.total;
                     }
@@ -251,6 +257,18 @@ const analysisRevit = (paths, callback) => {
 
     // 异步全部结束后对获取的楼进行处理
     Promise.all(promises).then(function (posts) {
+        let count = 0;
+        for (const array of posts) {
+            const length = array.length;
+            count += length;
+        }
+
+        const progress = {
+            all: count - 1,
+            divided: 0,
+            merged: 0,
+        }
+
         const group = new THREE.Group();
         group.name = '模型整体';
 
@@ -276,7 +294,7 @@ const analysisRevit = (paths, callback) => {
                     // build.children[0].scale.set(2, 2, 1);
                     group.add(build);
                 } else {
-                    const result = getDividedFloor(build, build_name, material_lib_box);
+                    const result = getDividedFloor(build, build_name, material_lib_box, progress);
                     group.add(result);
                 }
             }
