@@ -218,7 +218,7 @@ $(function () {
         const new_position = new THREE.Vector3();
         new_position.x = new_target.x + diagonal * 0.5;
         new_position.y = new_target.y + diagonal * 0.5;
-        new_position.z = new_target.z - diagonal * 0.5;
+        new_position.z = new_target.z + diagonal * 0.5;
 
 
         const start = {
