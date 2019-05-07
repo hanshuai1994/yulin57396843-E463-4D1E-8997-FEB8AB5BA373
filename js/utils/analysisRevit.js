@@ -121,14 +121,16 @@ const getDividedFloor = (build, build_name, material_lib_box, progress) => {
         }
     }
 
-    const $progress_divide = $('#loading>.progress.divide>.progress-bar')
+    const $progress = $('#loading>.progress>.progress-bar');
+    $('#loading>.text').text('处理中...');
+    $progress.addClass('progress-bar-success');
 
     const floor_offset = build_name == '连廊' ? 300 : 120;
     outer:
         for (const mesh of objects.box) { // 遍历 box 组的所有 mesh
             progress.divided++;
             const range = `${parseInt((progress.divided / progress.all * 100))}%`
-            $progress_divide.css('width', range).text(range);
+            $progress.css('width', range).text(range);
             
             const box3 = new THREE.Box3().expandByObject(mesh);
             const center = box3.getCenter(new THREE.Vector3());
@@ -181,7 +183,7 @@ const getDividedFloor = (build, build_name, material_lib_box, progress) => {
         // floor.name = i + 1 + '楼';
         // floor_group.add(floor);
 
-        const merge_result = merge_obj_children(objects.floor[i], progress);
+        const merge_result = merge_obj_children(objects.floor[i]);
         // console.log('merge_result', merge_result);
         merge_result.name = i + 1 + '楼';
         floor_group.add(merge_result);
@@ -219,7 +221,7 @@ const analysisRevit = (paths, callback) => {
     let loaded_map = {};
     // return
 
-    const $progress_load = $('#loading>.progress.load>.progress-bar');
+    const $progress = $('#loading>.progress>.progress-bar');
 
     // 使用 promise 进行多个异步处理
     let length = paths.length;
@@ -245,7 +247,7 @@ const analysisRevit = (paths, callback) => {
                         }
 
                         const range = `${parseInt((loaded_all / total * 100))}%`;
-                        $progress_load.css('width', range).text(range);
+                        $progress.css('width', range).text(range);
                     } else {
                         total += xhr.total;
                     }

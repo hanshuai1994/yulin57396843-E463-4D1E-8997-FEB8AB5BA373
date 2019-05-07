@@ -83,6 +83,9 @@ canvas {
 #loading.active {
   display: flex;
 }
+#loading > img {
+  width: 8%;
+}
 #loading > .text {
   font-size: 16px;
   font-weight: bold;

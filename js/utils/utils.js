@@ -1,5 +1,5 @@
 // 融合材质
-function merge_obj_children(array, progress) { //merge外部导入模型的同材质到一个数组
+function merge_obj_children(array) { //merge外部导入模型的同材质到一个数组
     var material_array = [];
     var geometry_array = [];
 
@@ -22,14 +22,8 @@ function merge_obj_children(array, progress) { //merge外部导入模型的同�
         }
     }
 
-    const $progress_merge = $('#loading>.progress.merge>.progress-bar');
     //开始进行合并
     for (var i = 0; i < geometry_array.length; i++) {
-        const length = geometry_array[i].length;
-        progress.merged += length;
-        const range = `${parseInt((progress.merged / progress.all * 100))}%`;
-        $progress_merge.css('width', range).text(range);
-
         geometry_array[i] = THREE.BufferGeometryUtils.mergeBufferGeometries(geometry_array[i]);
     }
 
