@@ -28,9 +28,9 @@ $(function () {
 
     // 建筑索引
     const builds_map = {
-        '北楼': undefined,
-        '亭廊': undefined,
-        '南楼': undefined,
+        '西楼': undefined,
+        '连廊': undefined,
+        '东楼': undefined,
     }
 
     // 房间划分
@@ -1149,12 +1149,15 @@ $(function () {
             // './models/south.toolkipBIM',
             // './models/west.toolkipBIM',
             // './models/land.toolkipBIM',
-            // './models/all1.fbx',
-            './models/yulin.FBX',
+            // './models/yulin.FBX',
+            './models/east.FBX',
+            './models/west.FBX',
+            './models/lianlang.FBX',
+            './models/floor.FBX',
         ];
 
         // 解析 revit 文件
-        analysisRevit(paths, function (group, material_lib_box, material_lib_clip) {
+        analysisRevit(paths, function (group, material_lib_box) {
             scene.add(group);
 
             // for (const material of material_lib_clip) {
@@ -1216,10 +1219,10 @@ $(function () {
             // }
 
             // // 遍历最外层 group, 获取三栋楼
-            // for (const child of group.children) {
-            //     const key = child.name;
-            //     builds_map[key] = child;
-            // }
+            for (const child of group.children) {
+                const key = child.name;
+                builds_map[key] = child;
+            }
 
             walkToObjects(group, true);
             // walkToObjects(scene, true);
@@ -1290,20 +1293,20 @@ $(function () {
                         index = Number(index);
 
                         if ($active_build.length == 1) {
-                            show_home_room_dom(); // 出现房间选择下拉界面
+                            // show_home_room_dom(); // 出现房间选择下拉界面
                         }
 
                         // 进行 clip 位置调整
-                        const build_constant = floor_heights[active_build_name];
-                        if (!build_constant[index]) {
-                            clipPlanes[0].constant = -10000 * scale_rate // 向下
-                        } else {
-                            const y_0 = build_constant[index + 1] * 1000 * scale_rate;
-                            const y_1 = build_constant[index] * 1000 * scale_rate;
+                        // const build_constant = floor_heights[active_build_name];
+                        // if (!build_constant[index]) {
+                        //     clipPlanes[0].constant = -10000 * scale_rate // 向下
+                        // } else {
+                        //     const y_0 = build_constant[index + 1] * 1000 * scale_rate;
+                        //     const y_1 = build_constant[index] * 1000 * scale_rate;
 
-                            clipPlanes[0].constant = y_0 // 向下
-                            clipPlanes[1].constant = -y_1 // 向上
-                        }
+                        //     clipPlanes[0].constant = y_0 // 向下
+                        //     clipPlanes[1].constant = -y_1 // 向上
+                        // }
 
 
                         const floor_index = index + 1;
@@ -1314,18 +1317,11 @@ $(function () {
                                 const floors = child.children;
                                 for (const floor of floors) { // 遍历获取每层楼
                                     if (floor.name && floor.name == floor_index + '楼') { // 显示目标楼层
+                                        console.log('floor', floor);
                                         floor.visible = true;
                                         walkToObjects(floor);
                                     } else {
-                                        // if (active_build_name == '亭廊') { // 亭廊的一楼和二楼同时显示
-                                        //     if ((floor_index == 1 && floor.name == '2楼') || (floor_index == 2 && floor.name == '1楼')) {
-                                        //         floor.visible = true;
-                                        //     } else {
-                                        //         floor.visible = false;
-                                        //     }
-                                        // } else { // 隐藏其他楼层
                                         floor.visible = false;
-                                        // }
                                     }
                                 }
                             }
@@ -1338,6 +1334,7 @@ $(function () {
         // 解析房间信息
         $.getJSON('./js/data/roomData.js', function (data) {
             // console.log('data', data);
+            return
             const roomGroup = new THREE.Group();
             roomGroup.name = '房间地面组';
             scene.add(roomGroup);
@@ -1416,8 +1413,8 @@ $(function () {
             // console.log('room_mesh_map', room_mesh_map)
 
             // 触发一次运维页的楼栋切换
-            const manage_first_build_tab = $('#tab-manage .operate-menu .build-tab').children()[0];
-            manage_switch_build(manage_first_build_tab);
+            // const manage_first_build_tab = $('#tab-manage .operate-menu .build-tab').children()[0];
+            // manage_switch_build(manage_first_build_tab);
 
             // 添加房间选择的射线函数绑定
             $(container).on('mousedown', '>canvas', function (event) {
@@ -1447,17 +1444,6 @@ $(function () {
                     mousedown_point = intersects[0].point;
                 }
             })
-
-            // 测试用捕捉射线
-            // $(container).on('mousedown', '>canvas', function (event) {
-            //     const raycaster = getRaycaster(event);
-            //     const intersects = raycaster.intersectObjects([scene], true);
-
-            //     if (intersects.length > 0) {
-            //         mesh = intersects[0].object;
-            //         console.log('mesh', mesh);
-            //     }
-            // })
 
             $(container).on('mouseup', '>canvas', function (event) {
                 // 未在画布内按下，则返回
@@ -1508,7 +1494,16 @@ $(function () {
             })
         })
 
+        // 测试用捕捉射线
+        $(container).on('mousedown', '>canvas', function (event) {
+            const raycaster = getRaycaster(event);
+            const intersects = raycaster.intersectObjects([scene], true);
 
+            if (intersects.length > 0) {
+                mesh = intersects[0].object;
+                console.log('mesh', mesh);
+            }
+        })
     }
 
     // 适应窗口大小变化
@@ -1631,4 +1626,5 @@ $(function () {
     //         console.log('err', err);
     //     }
     // })
+    console.log('renderer', renderer);
 })

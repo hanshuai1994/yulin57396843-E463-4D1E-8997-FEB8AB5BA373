@@ -2,13 +2,16 @@
 function merge_obj_children(array) { //merge外部导入模型的同材质到一个数组
     var material_array = [];
     var geometry_array = [];
-    const name_array = [];
 
     for (const object of array) { // 遍历所有object
         const geometry = object.geometry;
         const material = object.material;
 
-        const new_geometry = new THREE.BufferGeometry().fromGeometry(geometry);
+        // const new_geometry = new THREE.BufferGeometry().fromGeometry(geometry);
+        object.updateMatrixWorld();
+        const matrixWorld = object.matrixWorld;
+        const new_geometry = geometry.clone();
+        new_geometry.applyMatrix(matrixWorld);
 
         var index = material_array.indexOf(material); // 进行一次基于指针的存在判断
         if (index == -1) {

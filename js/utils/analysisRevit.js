@@ -100,13 +100,9 @@ const divideGroup = (group, meshes, line_material, material_lib) => {
  * @param {array} material_lib_box  box 材质库
  * @param {array} material_lib_clip clip 材质库
  */
-const getDividedFloor = (build, build_name, material_lib_box, material_lib_clip) => {
+const getDividedFloor = (build, build_name, material_lib_box) => {
     // 用于区分楼层的预设高度
-    const preHeight = {
-        '亭廊': [-0.45, 4.5, 7.8],
-        '北楼': [-0.45, 4.2, 7.8, 11.4, 15, 18.6, 22.2],
-        '南楼': [-0.45, 3.82, 7.02, 10.22, 13.42, 16.62, 19.82, 23.02, 26.62],
-    }
+    const preHeight = [0.00, 4.50, 9.00, 11.50]
 
     const result = new THREE.Group();
     result.name = build_name;
@@ -121,69 +117,33 @@ const getDividedFloor = (build, build_name, material_lib_box, material_lib_clip)
     for (const mesh of build.children) {
         // 遍历获取所有 mesh
         if (mesh instanceof THREE.Mesh && mesh.geometry) {
-            if (
-                mesh.name.includes('ZJKJ_结构柱_矩形_C30_') ||
-                mesh.name.includes('ZJKJ_结构梁_矩形_C30_') ||
-                mesh.name.includes('ZJKJ_结构柱_异型__C30_') ||
-                mesh.name.includes('Floor_ZJKJ_楼地面_钢筋混凝土') ||
-                mesh.name.includes('Basic_Roof_住建局_-_150mm-平屋顶')
-            ) {
-                mesh.scale.set(0.99, 0.99, 0.99);
-            }
-
-
-            if (
-                mesh.name.includes('2144203') || // 北楼楼梯柱子
-                mesh.name.includes('2243475') || // 柱 1
-                mesh.name.includes('2144206') || // 工业装配楼梯
-                mesh.name.includes('2144249') || // 1100 mm
-                mesh.name.includes('2144245') || // 1100 mm
-                mesh.name.includes('2151541') // ZJKJ_窗_MQ2
-            ) {
-                objects.clip.push(mesh);
-                unifyMaterial(material_lib_clip, mesh);
-            } else {
-                objects.box.push(mesh);
-                unifyMaterial(material_lib_box, mesh);
-            }
+            objects.box.push(mesh);
+            unifyMaterial(material_lib_box, mesh);
         }
     }
-
-    const build_heights = preHeight[build_name]; // 一栋楼的楼层高度数组
 
     outer:
         for (const mesh of objects.box) { // 遍历 box 组的所有 mesh
             const box3 = new THREE.Box3().expandByObject(mesh);
             const center = box3.getCenter(new THREE.Vector3());
 
-            const length = build_heights.length;
+            const length = preHeight.length;
             for (let i = 0; i < length - 1; i++) {
                 if (!objects.floor[i]) {
                     objects.floor[i] = [];
                 }
 
-                const floor_height = build_heights[i] * 1000 - 120;
-                const next_height = build_heights[i + 1] * 1000 - 120;
+                const floor_height = preHeight[i] * 1000 - 120;
+                const next_height = preHeight[i + 1] * 1000 - 120;
 
                 if (center.y >= floor_height && center.y < next_height) {
-                    if (build_name == '亭廊' && i == 1) {
-                        if (
-                            mesh.name.includes('矩形钢管柱_600_') ||
-                            mesh.name.includes('矩形钢管柱_400_') ||
-                            // mesh.name.includes('2148185') ||
-                            mesh.name.includes('2145308') ||
-                            mesh.name.includes('2148187') ||
-                            mesh.name.includes('2207588') ||
-                            mesh.name.includes('矩形竖梃_50_x_150_mm_')
-                        ) {
-                            objects.floor[i - 1].push(mesh);
-                        } else {
-                            objects.floor[i].push(mesh);
-                        }
-                    } else {
-                        objects.floor[i].push(mesh);
-                    }
+                    objects.floor[i].push(mesh);
                     continue outer;
+                }
+
+                build_data[build_name][i] = {
+                    floorName: `${i + 1}楼`,
+                    rooms: [],
                 }
             }
 
@@ -199,35 +159,40 @@ const getDividedFloor = (build, build_name, material_lib_box, material_lib_clip)
     floor_group.name = '楼层组';
     result.add(floor_group);
 
-    let line_material = new THREE.LineBasicMaterial({
-        color: 0x0d0d0d,
-        transparent: true,
-        opacity: 0.3
-    });
-    line_material.name = '附加线框材质_box';
+    // let line_material = new THREE.LineBasicMaterial({
+    //     color: 0x0d0d0d,
+    //     transparent: true,
+    //     opacity: 0.3
+    // });
+    // line_material.name = '附加线框材质_box';
 
     // 将每一层添加进楼层组
     for (let i = 0; i < objects.floor.length; i++) {
-        const floor = new THREE.Group();
-        floor.name = i + 1 + '楼';
-        floor_group.add(floor);
+        // const floor = new THREE.Group();
+        // floor.name = i + 1 + '楼';
+        // floor_group.add(floor);
 
-        divideGroup(floor, objects.floor[i], line_material, material_lib_box);
+        const merge_result = merge_obj_children(objects.floor[i]);
+        // console.log('merge_result', merge_result);
+        merge_result.name = i + 1 + '楼';
+        floor_group.add(merge_result);
+
+        // divideGroup(floor, objects.floor[i], line_material, material_lib_box);
     }
 
     // clip组
-    const clip_group = new THREE.Group();
-    clip_group.name = 'clip组';
-    result.add(clip_group);
+    // const clip_group = new THREE.Group();
+    // clip_group.name = 'clip组';
+    // result.add(clip_group);
 
-    line_material = new THREE.LineBasicMaterial({
-        color: 0x0d0d0d,
-        transparent: true,
-        opacity: 0.3
-    });
-    line_material.name = '附加线框材质_clip';
+    // line_material = new THREE.LineBasicMaterial({
+    //     color: 0x0d0d0d,
+    //     transparent: true,
+    //     opacity: 0.3
+    // });
+    // line_material.name = '附加线框材质_clip';
 
-    divideGroup(clip_group, objects.clip, line_material, material_lib_clip);
+    // divideGroup(clip_group, objects.clip, line_material);
 
     return result
 }
@@ -287,37 +252,36 @@ const analysisRevit = (paths, callback) => {
         group.name = '模型整体';
 
         const material_lib_box = [];
-        const material_lib_clip = [];
 
         for (const key in builds) {
             if (builds.hasOwnProperty(key)) {
                 const build = builds[key];
 
-                // let build_name = '地面';
-                // if (key.includes("north")) {
-                //     build_name = "北楼";
-                // } else if (key.includes("west")) {
-                //     build_name = "亭廊";
-                // } else if (key.includes("south")) {
-                //     build_name = "南楼";
-                // }
+                let build_name = '地面';
+                if (key.includes("west")) {
+                    build_name = "西楼";
+                } else if (key.includes("lianlang")) {
+                    build_name = "连廊";
+                } else if (key.includes("east")) {
+                    build_name = "东楼";
+                }
 
-                // if (key.includes('land')) { // 地面
-                //     build.name = build_name;
-                //     build.children[0].receiveShadow = true;
-                //     build.children[0].scale.set(2, 2, 1);
-                //     group.add(build);
-                // } else {
-                //     const result = getDividedFloor(build, build_name, material_lib_box, material_lib_clip);
-                //     group.add(result);
-                // }
-                group.add(build);
+
+                if (build_name == '地面') { // 地面
+                    build.name = build_name;
+                    // build.children[0].receiveShadow = true;
+                    // build.children[0].scale.set(2, 2, 1);
+                    group.add(build);
+                } else {
+                    const result = getDividedFloor(build, build_name, material_lib_box);
+                    group.add(result);
+                }
             }
         }
 
         console.log('group', group);
 
-        callback(group, material_lib_box, material_lib_clip);
+        callback(group, material_lib_box);
     })
 }
 
