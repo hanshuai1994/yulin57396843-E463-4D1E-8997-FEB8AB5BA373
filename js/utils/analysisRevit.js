@@ -1,4 +1,3 @@
-
 /**
  * @name 以mesh的name作为材质的name
  * @param {*} material 
@@ -23,7 +22,7 @@ const unifyMaterial = (material_lib, mesh) => {
         outer:
             for (let i = 0; i < length; i++) { // 遍历自身的材质
                 // 材质没有名字时，为材质附加mesh的名字
-                if (mesh_materials[i].name =='') {
+                if (mesh_materials[i].name == '') {
                     addMaterialName(mesh_materials[i], mesh);
                 }
 
@@ -39,7 +38,7 @@ const unifyMaterial = (material_lib, mesh) => {
         let has_material = false;
 
         // 材质没有名字时，为材质附加mesh的名字
-        if (mesh_materials.name =='') {
+        if (mesh_materials.name == '') {
             addMaterialName(mesh_materials, mesh);
         }
 
@@ -122,6 +121,7 @@ const getDividedFloor = (build, build_name, material_lib_box) => {
         }
     }
 
+    const floor_offset = build_name == '连廊' ? 300 : 120;
     outer:
         for (const mesh of objects.box) { // 遍历 box 组的所有 mesh
             const box3 = new THREE.Box3().expandByObject(mesh);
@@ -129,21 +129,24 @@ const getDividedFloor = (build, build_name, material_lib_box) => {
 
             const length = preHeight.length;
             for (let i = 0; i < length - 1; i++) {
+
+                if (!build_data[build_name][i]) {
+                    build_data[build_name][i] = {
+                        floorName: `${i + 1}楼`,
+                        rooms: [],
+                    }
+                }
+
                 if (!objects.floor[i]) {
                     objects.floor[i] = [];
                 }
 
-                const floor_height = preHeight[i] * 1000 - 120;
-                const next_height = preHeight[i + 1] * 1000 - 120;
+                const floor_height = preHeight[i] * 1000 - floor_offset;
+                const next_height = preHeight[i + 1] * 1000 - floor_offset;
 
                 if (center.y >= floor_height && center.y < next_height) {
                     objects.floor[i].push(mesh);
                     continue outer;
-                }
-
-                build_data[build_name][i] = {
-                    floorName: `${i + 1}楼`,
-                    rooms: [],
                 }
             }
 
