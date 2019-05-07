@@ -1335,6 +1335,7 @@ $(function () {
         })
 
         // 解析房间信息
+        /*
         $.getJSON('./js/data/roomData.js', function (data) {
             // console.log('data', data);
             return
@@ -1496,6 +1497,7 @@ $(function () {
                 }
             })
         })
+        */
 
         // 测试用捕捉射线
         $(container).on('mousedown', '>canvas', function (event) {

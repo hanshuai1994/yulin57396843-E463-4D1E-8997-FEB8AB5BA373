@@ -121,16 +121,12 @@ const getDividedFloor = (build, build_name, material_lib_box, progress) => {
         }
     }
 
-    const $progress = $('#loading>.progress>.progress-bar');
-    $('#loading>.text').text('处理中...');
-    $progress.addClass('progress-bar-success');
-
     const floor_offset = build_name == '连廊' ? 300 : 120;
     outer:
         for (const mesh of objects.box) { // 遍历 box 组的所有 mesh
             progress.divided++;
             const range = `${parseInt((progress.divided / progress.all * 100))}%`
-            $progress.css('width', range).text(range);
+            $('#loading>.progress.handle>.progress-bar').css('width', range).text(range);
             
             const box3 = new THREE.Box3().expandByObject(mesh);
             const center = box3.getCenter(new THREE.Vector3());
@@ -221,8 +217,6 @@ const analysisRevit = (paths, callback) => {
     let loaded_map = {};
     // return
 
-    const $progress = $('#loading>.progress>.progress-bar');
-
     // 使用 promise 进行多个异步处理
     let length = paths.length;
     for (let i = 0; i < length; i++) {
@@ -246,8 +240,18 @@ const analysisRevit = (paths, callback) => {
                             loaded_all += loaded_map[key];
                         }
 
-                        const range = `${parseInt((loaded_all / total * 100))}%`;
-                        $progress.css('width', range).text(range);
+                        let rate = loaded_all / total;
+                        if (rate > 0.85) {
+                            $('#loading>.text').text('处理中...');
+                            $('#loading>img').attr('src', './img/loading2.gif')
+
+                            $('#loading>.progress.load').hide();
+                            $('#loading>.progress.handle').show();
+                        } else {
+                            rate += 0.15;
+                            const range = `${parseInt(( rate * 100))}%`;
+                            $('#loading>.progress.load>.progress-bar').css('width', range).text(range);
+                        }
                     } else {
                         total += xhr.total;
                     }
