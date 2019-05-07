@@ -272,7 +272,7 @@ const analysisRevit = (paths, callback) => {
 
                 if (build_name == '地面') { // 地面
                     build.name = build_name;
-                    // build.children[0].receiveShadow = true;
+                    build.children[0].receiveShadow = true;
                     // build.children[0].scale.set(2, 2, 1);
                     group.add(build);
                 } else {

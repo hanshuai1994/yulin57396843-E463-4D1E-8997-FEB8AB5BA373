@@ -40,7 +40,21 @@ function merge_obj_children(array) { //merge外部导入模型的同材质到一
     group.add(group_mesh, group_edge);
 
     for (var i = 0; i < geometry_array.length; i++) {
-        const mesh = new THREE.Mesh(geometry_array[i], material_array[i]);
+        const new_material = new THREE.MeshLambertMaterial();
+        if (Array.isArray(material_array[i])) {
+            new_material.color = material_array[i][0].color.clone();
+            new_material.transparent = material_array[i][0].transparent;
+            new_material.opacity = material_array[i][0].opacity;
+        } else {
+            new_material.color = material_array[i].color.clone();
+            new_material.transparent = material_array[i].transparent;
+            new_material.opacity = material_array[i].opacity;
+        }
+
+
+        const mesh = new THREE.Mesh(geometry_array[i], new_material);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
         var geo = new THREE.EdgesGeometry(geometry_array[i], 30); // or WireframeGeometry( geometry )
         var mat = new THREE.LineBasicMaterial({
             color: 0x0d0d0d,
