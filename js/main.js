@@ -1153,10 +1153,10 @@ $(function () {
             // './models/west.toolkipBIM',
             // './models/land.toolkipBIM',
             // './models/yulin.FBX',
-            './models/east.FBX',
-            './models/west.FBX',
-            './models/lianlang.FBX',
-            './models/floor.FBX',
+            './models/east.toolkipBIM',
+            './models/west.toolkipBIM',
+            './models/lianlang.toolkipBIM',
+            './models/floor.toolkipBIM',
         ];
 
         // 解析 revit 文件
