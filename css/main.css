@@ -96,9 +96,6 @@ canvas {
   margin-top: 20px;
   width: 50%;
 }
-#loading > .progress.handle {
-  display: none;
-}
 .build-tab {
   display: flex;
   width: 100%;

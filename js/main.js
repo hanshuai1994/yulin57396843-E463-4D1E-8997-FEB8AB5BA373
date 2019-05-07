@@ -161,12 +161,17 @@ $(function () {
             position.copy(new_position);
             target.copy(new_target);
         } else {
+            let time = max_distance / 40 / scale_rate;
+
+            if (time > 3) {
+                time = 3;
+            }
             const tween_p = new TWEEN.Tween(position);
-            tween_p.to(new_position, max_distance / 40 / scale_rate).start();
+            tween_p.to(new_position, ).start();
 
             // 更新控制器target
             const tween_t = new TWEEN.Tween(target);
-            tween_t.to(new_target, max_distance / 40 / scale_rate).start();
+            tween_t.to(new_target, time).start();
         }
 
         position_m = new_position.clone();
