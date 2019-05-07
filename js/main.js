@@ -168,6 +168,9 @@ $(function () {
             const tween_t = new TWEEN.Tween(target);
             tween_t.to(new_target, max_distance / 40 / scale_rate).start();
         }
+
+        position_m = new_position.clone();
+        target_m = new_target.clone();
     };
 
     // 添加高亮
@@ -935,8 +938,8 @@ $(function () {
             }
             walkToTarget(start, end);
 
-            position_m = undefined;
-            target_m = undefined;
+            // position_m = undefined;
+            // target_m = undefined;
 
             dom_room_select('all')
         }
@@ -1501,7 +1504,7 @@ $(function () {
 
             if (intersects.length > 0) {
                 mesh = intersects[0].object;
-                console.log('mesh', mesh);
+                // console.log('mesh', mesh);
             }
         })
     }
