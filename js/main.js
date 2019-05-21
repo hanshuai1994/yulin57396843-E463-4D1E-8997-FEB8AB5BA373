@@ -1152,6 +1152,13 @@ $(function () {
         //     './models/tinglang.js',
         //     './models/land.js',
         // ];
+
+        const loader = new THREE.FBXLoader();
+        loader.load('./models/mep无土建.FBX', function(object) {
+            console.log('object', object);
+            scene.add(object);
+        })
+
         const paths = [
             // './models/north.toolkipBIM',
             // './models/south.toolkipBIM',
