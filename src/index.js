@@ -61,7 +61,8 @@ $(function () {
     const build_data = {};
 
     // 楼栋切换栏
-    const $build_tab = $('#container>.select-wrap>.build-tab');
+    const $home_build_tab = $('#tab-home .build-tab');
+    // const $mana_build_tab = $('#tab-manage .build-tab');
 
     // 对应赋值
     for (let i = 0; i < builds.length; i++) {
@@ -76,7 +77,8 @@ $(function () {
             // { floorName: `屋顶` },
         ];
 
-        $build_tab.append(`<span class="active" data-name=${buildName}>${buildName}</span>`)
+        $home_build_tab.append(`<span class="active" data-name=${buildName}>${buildName}</span>`);
+        // $mana_build_tab.append(`<span ${i == 0 ? "class=active" : ''} data-name=${buildName}>${buildName}</span>`);
     }
 
 
